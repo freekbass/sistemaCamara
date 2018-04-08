@@ -33,6 +33,7 @@ php artisan migrate
 
 Obs: executar o projeto pelo server do Artisan, por questão de rotas configuradas no projeto.
 Para rodar em outro servidor, tem q ser configurado pra rodar em \
+Abrir Propmt do Windows e acessar o diretorio raiz do projeto e rodar:
 ```
 php artisan serve
 ```
