@@ -1,17 +1,17 @@
 # sistemaCamara
 Teste prático para a Virtualiza
 
-# Instalação 
+## Instalação 
 
 Instalar composer pelo site https://getcomposer.org/download/
 
-##Instalação do projeto
+## Instalação do projeto
 
 ```
 composer install
 ```
 
-## banco de dados
+## Configuração do Banco de Dados
 Criar um banco de dados no Mysql, sem nenhuma alteração (banco zerado)
 Acessar a pasta do projeto e altear o arquivo .env com os dados do banco gerado:
 Ex:
