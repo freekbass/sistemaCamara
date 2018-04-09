@@ -1,0 +1,71 @@
+<div ng-controller="vereadorController">
+    <div class="container" ng-init="listar()">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Cadastro de Vereadores</h1>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <a href="#/home" class="btn btn-primary fa fa-arrow-back" >Voltar</a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Novo</button>
+            </div>
+            <div class="col-md-6">
+                <input class="form-control" ng-model="pesquisar">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome</th>
+                            <th>Partido</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="vereador in vereadores| filter : pesquisar">
+                            <td>{{vereador.id}}</td>
+                            <td>{{vereador.nome}}</td>
+                            <td>{{vereador.partido}}</td>
+                            <td>
+                                <button class="btn btn-info btn-xs" ng-click="editar(vereador)">Editar</button>
+                                <button class="btn btn-danger btn-xs" ng-click="excluir(vereador)">Excluir</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Cadastro de Vereador</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nome:</label>
+                        <input type="text" class="form-control" ng-model="vereador.nome">
+                    </div>
+                    <div class="form-group">
+                        <label>Partido:</label>
+                        <input type="text" class="form-control" ng-model="vereador.partido">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vereador = {}">Cancelar</button>
+                    <button type="button" class="btn btn-primary" ng-click="salvar()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

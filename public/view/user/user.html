@@ -1,0 +1,77 @@
+<div ng-controller="userController">
+    <div class="container" ng-init="listar()">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Usuário</h1>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <a href="#/home" class="btn btn-primary fa fa-arrow-back" >Voltar</a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Novo Usuário</button>
+            </div>
+            <div class="col-md-6">
+                <input class="form-control" ng-model="pesquisar">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="user in users | filter : pesquisar">
+                            <td>{{user.id}}</td>
+                            <td>{{user.name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>
+                                <button class="btn btn-info btn-xs" ng-click="editar(user)">Editar</button>
+                                <button class="btn btn-danger btn-xs" ng-click="excluir(user)">Excluir</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Cadastro de Usuário</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Nome:</label>
+                            <input type="text" class="form-control" ng-model="user.name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail:</label>
+                            <input type="email" class="form-control" ng-model="user.email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Senha:</label>
+                            <input type="password" class="form-control" ng-model="user.password" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="user = {}">Cancelar</button>
+                        <button type="button" class="btn btn-primary" ng-click="salvar()">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

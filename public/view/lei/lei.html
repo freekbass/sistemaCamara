@@ -1,0 +1,105 @@
+<div ng-controller="leiController">
+    <div class="container" ng-init="listar()">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Leis</h1>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <a href="#/home" class="btn btn-primary fa fa-arrow-back" >Voltar</a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-click="carregarDados()">Novo</button>
+            </div>
+            <div class="col-md-6">
+                <input class="form-control" ng-model="pesquisar">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Título</th>
+                            <th>Número</th>
+                            <th>Ano</th>
+                            <th>Tipo</th>
+                            <th>Autor</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="lei in leis | filter : pesquisar">
+                            <td>{{lei.id}}</td>
+                            <td>{{lei.titulo}}</td>
+                            <td>{{lei.numero}}</td>
+                            <td>{{lei.ano}}</td>
+                            <td>{{tipos[lei.tipo]}}</td>
+                            <td>{{lei.vereador.nome}}</td>
+                            <td>
+                                <button class="btn btn-info btn-xs" ng-click="editar(lei)">Editar</button>
+                                <button class="btn btn-danger btn-xs" ng-click="excluir(lei)">Excluir</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Cadastro de Lei</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Título</label>
+                                <input type="text" class="form-control" ng-model="lei.titulo">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Número:</label>
+                                <input type="text" class="form-control" ng-model="lei.numero">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Ano:</label>
+                                <input type="text" class="form-control" ng-model="lei.ano">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Tipo:</label>
+                                <select class="form-control" id="tipo" ng-model="lei.tipo">
+                                    <option ng-repeat="tipo in tipos track by $index" value="{{$index}}">{{tipo}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Autor:</label>
+                                <select class="form-control" id="vereador" ng-model="lei.vereador_id">
+                                    <option ng-repeat="vereador in vereadores" value="{{vereador.id}}">{{vereador.nome}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="lei = {}">Cancelar</button>
+                    <button type="button" class="btn btn-primary" ng-click="salvar()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,197 @@
+<div ng-controller="registroSessaoController">
+    <div class="container" ng-init="carregarDados()">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Registro de Sessão</h1>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Sessão</label>
+                    <select class='form-control' ng-model="sessaoSelecionada"
+                            ng-change="setSessao(sessaoSelecionada)"
+                            ng-options="sessao.id as sessao.descricao for (key, sessao) in sessoes">
+                        <option ng-value="" value="" disabled>Selecione uma sessão</option>
+                    </select>
+                </div>    
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary" ng-disabled="sessaoSelecionada == null" ng-click="iniciarSessao()">Iniciar Sessão</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="sessaoSelecionada == null" data-toggle="modal" data-target="#modal-adicionar-lei" ng-click="abrirModalLei()">Incluir Lei</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="sessaoSelecionada == null" ng-click="abrirModalRegistrarPresenca()">Registrar Presença</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row" ng-show="sessao.data_inicio != null">
+            <div class="col-md-12">
+                <fieldset>
+                    <legend>Leis em Votação</legend>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Título</th>
+                                <th>Número</th>
+                                <th>Ano</th>
+                                <th>Tipo</th>
+                                <th>Autor</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="sessao_lei in sessao.leis">
+                                <td>{{sessao_lei.lei.id}}</td>
+                                <td>{{sessao_lei.lei.titulo}}</td>
+                                <td>{{sessao_lei.lei.numero}}</td>
+                                <td>{{sessao_lei.lei.ano}}</td>
+                                <td>{{tipos[sessao_lei.lei.tipo]}}</td>
+                                <td>{{sessao_lei.lei.vereador.nome}}</td>
+                                <td>
+                                    <button class="btn btn-info btn-xs" ng-click="abrirModalRegistrarVoto(sessao_lei.lei.id)">Registrar Voto</button>
+                                    <button class="btn btn-danger btn-xs" ng-click="desvincularLei(sessao_lei.lei.id)" >Desvincular Lei</button>
+                                    <button class="btn btn-info btn-xs" ng-click="vizualizarVotos(sessao_lei.lei.id)">Vizualizar Votos</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+        <hr>
+        <div class="row" ng-show="sessao.data_inicio != null">
+            <div class="col-md-12">
+                <fieldset>
+                    <legend>Registro de Presença</legend>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Vereador</th>
+                                <th>Presente</th>
+                                <th>Motivo</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="sessao_presenca in sessao.presenca">
+                                <td>{{sessao_presenca.vereador.nome}}</td>
+                                <td>{{sessao_presenca.presente == 1 ? 'Presente' : 'Ausente'}}</td>
+                                <td>{{sessao_presenca.motivo}}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-xs" ng-click="removerPresenca(sessao_presenca.vereador.id)">Remover Presença</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal-adicionar-lei" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Adicionar Lei a Sessão</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Lei</label>
+                            <select class='form-control' ng-model="leiSelecionada"
+                                    ng-options="lei.id as (lei.titulo +    ' - ' +    lei.ano) for lei in leis">
+                                <option ng-value="" value="" disabled>Selecione uma lei</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="">Cancelar</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vincularLei()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-vereador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">{{titulo_modal_vereador}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Vereador</label>
+                                <select class='form-control' ng-model="vereadorSelecionado"
+                                        ng-options="vereador.id as vereador.nome for vereador in vereadores">
+                                    <option ng-value="" value="" disabled>Selecione um vereador</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12" ng-show="is_presenca">
+                            <div class="form-group" >
+                                <label>Motivo</label>
+                                <textarea class="form-control" style="width: 100%" ng-model="motivo"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="">Cancelar</button>
+                        <div ng-show="is_presenca">
+                            <button type="button" class="btn btn-danger"  ng-click="registrarAusencia()">Registrar Ausência</button>
+                            <button type="button" class="btn btn-primary" ng-click="registrarPresenca()">Registrar Presença</button>
+                        </div>
+                        <div ng-show="!is_presenca">
+                            <button type="button" class="btn btn-danger"  ng-click="registrarVoto(false)">Reprovar</button>
+                            <button type="button" class="btn btn-primary" ng-click="registrarVoto(true)">Aprovar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-votos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Votos Registrados</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Vereador</th>
+                                        <th>Voto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="voto in votos">
+                                        <td>{{voto.vereador.nome}}</td>
+                                        <td>{{voto.aprovado == 1 ? 'Aprovado' :  'Reprovado'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
